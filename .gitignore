@@ -1,0 +1,67 @@
+# Xcode
+.DS_Store
+*/.DS_Store
+build/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcuserstate
+
+# Swift Package Manager
+Packages/
+.package/
+.swiftpm/xcode/package.resolved
+**/.build/
+**/xcuserdata/
+
+# CocoaPods
+Pods/
+Podfile.lock
+Podfile.scripts/
+**/xcuserdata/
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# Firebase
+GoogleService-Info.plist
+
+# Temporary files
+*.swp
+*.swo
+*~.nib~
+
+# AppCode
+.idea/
+*.iml
+
+# Xcode Generated Files
+*.xcarchive
+*.xcworkspace
+!default.xcworkspace
+
+# Certificates
+*.certSigningRequest
+*.cer
+*.p12
+
+# Other
+*.orig
+*.log
+*.temp
