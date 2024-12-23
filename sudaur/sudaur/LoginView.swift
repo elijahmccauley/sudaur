@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 import FirebaseAuth
-
+import FirebaseFirestore
 
 struct LoginView: View {
     @State private var email = ""
@@ -40,6 +40,10 @@ struct LoginView: View {
                 signIn(email: email, password: password)
             }
             .padding()
+            Button("test") {
+                addDataToFirestore(email: email, password: password)
+            }
+            .padding()
         }
         .padding()
     }
@@ -54,6 +58,12 @@ struct LoginView: View {
                 print("User signed in: \(result?.user.email ?? "No email")")
                 // You can navigate to the next screen here using a NavigationLink or other navigation methods
             }
+        }
+    }
+    
+    func addDataToFirestore(email: String, password: String) {
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+          // ...
         }
     }
 }
