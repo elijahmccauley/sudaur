@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 import FirebaseAuth
 
+
 struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
