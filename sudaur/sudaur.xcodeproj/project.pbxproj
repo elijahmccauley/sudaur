@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3DC3DFE72D193995002A4378 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC3DFE62D193995002A4378 /* FirebaseAnalytics */; };
+		3DC3DFE92D193995002A4378 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC3DFE82D193995002A4378 /* FirebaseAuth */; };
+		3DC3DFEB2D193995002A4378 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC3DFEA2D193995002A4378 /* FirebaseDatabase */; };
+		3DC3DFED2D193995002A4378 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC3DFEC2D193995002A4378 /* FirebaseFunctions */; };
+		3DC3DFEF2D193995002A4378 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC3DFEE2D193995002A4378 /* FirebaseMessaging */; };
+		3DC3DFF12D193995002A4378 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC3DFF02D193995002A4378 /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		3DC3DFC72D1936F8002A4378 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +61,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DC3DFEB2D193995002A4378 /* FirebaseDatabase in Frameworks */,
+				3DC3DFE72D193995002A4378 /* FirebaseAnalytics in Frameworks */,
+				3DC3DFEF2D193995002A4378 /* FirebaseMessaging in Frameworks */,
+				3DC3DFE92D193995002A4378 /* FirebaseAuth in Frameworks */,
+				3DC3DFED2D193995002A4378 /* FirebaseFunctions in Frameworks */,
+				3DC3DFF12D193995002A4378 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +127,12 @@
 			);
 			name = sudaur;
 			packageProductDependencies = (
+				3DC3DFE62D193995002A4378 /* FirebaseAnalytics */,
+				3DC3DFE82D193995002A4378 /* FirebaseAuth */,
+				3DC3DFEA2D193995002A4378 /* FirebaseDatabase */,
+				3DC3DFEC2D193995002A4378 /* FirebaseFunctions */,
+				3DC3DFEE2D193995002A4378 /* FirebaseMessaging */,
+				3DC3DFF02D193995002A4378 /* FirebaseStorage */,
 			);
 			productName = sudaur;
 			productReference = 3DC3DFB52D1936F5002A4378 /* sudaur.app */;
@@ -195,6 +216,9 @@
 			);
 			mainGroup = 3DC3DFAC2D1936F5002A4378;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3DC3DFB62D1936F5002A4378 /* Products */;
 			projectDirPath = "";
@@ -406,7 +430,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
@@ -414,10 +438,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = sudaur.sudaur;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
@@ -445,7 +470,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
@@ -453,10 +478,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = sudaur.sudaur;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
@@ -591,6 +617,50 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3DC3DFE62D193995002A4378 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		3DC3DFE82D193995002A4378 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		3DC3DFEA2D193995002A4378 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		3DC3DFEC2D193995002A4378 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		3DC3DFEE2D193995002A4378 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		3DC3DFF02D193995002A4378 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DC3DFE52D193995002A4378 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3DC3DFAD2D1936F5002A4378 /* Project object */;
 }
