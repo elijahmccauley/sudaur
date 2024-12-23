@@ -12,12 +12,24 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text("Sudaur")
+            Spacer()
+            HStack (alignment: .bottom) {
+                Spacer()
+                Image(systemName: "house")
+                    .imageScale(.large)
+                Spacer()
+                Image(systemName: "message")
+                    .imageScale(.large)
+                Spacer()
+                Image(systemName: "person.circle.fill")
+                    .imageScale(.large)
+                Spacer()
+                
+            }
         }
         .padding()
+        
         
     }
 }

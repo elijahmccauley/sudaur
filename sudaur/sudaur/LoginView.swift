@@ -40,8 +40,8 @@ struct LoginView: View {
                 signIn(email: email, password: password)
             }
             .padding()
-            Button("test") {
-                addDataToFirestore(email: email, password: password)
+            Button("Create User") {
+                createUser(email: email, password: password)
             }
             .padding()
         }
@@ -61,7 +61,7 @@ struct LoginView: View {
         }
     }
     
-    func addDataToFirestore(email: String, password: String) {
+    func createUser(email: String, password: String) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
           // ...
         }
