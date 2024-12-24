@@ -40,7 +40,7 @@ fastlane/screenshots/**/*.png
 fastlane/test_output/
 
 # Firebase
-GoogleService-Info.plist
+GoogleService-Info-2.plist
 
 # Temporary files
 *.swp
