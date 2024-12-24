@@ -40,7 +40,7 @@ struct LoginView: View {
                 signIn(email: email, password: password)
             }
             .padding()
-            Button("Create User") {
+            Button("Create New User") {
                 createUser(email: email, password: password)
             }
             .padding()
@@ -57,6 +57,7 @@ struct LoginView: View {
                 // Handle successful sign-in (e.g., navigate to home screen)
                 print("User signed in: \(result?.user.email ?? "No email")")
                 // You can navigate to the next screen here using a NavigationLink or other navigation methods
+                self.errorMessage = "success"
             }
         }
     }
@@ -64,6 +65,13 @@ struct LoginView: View {
     func createUser(email: String, password: String) {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
           // ...
+            if let error = error {
+                self.errorMessage = error.localizedDescription
+
+                    }
+            else{
+                print("User created successfully: \(authResult?.user.email ?? "")")
+            }
         }
     }
 }
