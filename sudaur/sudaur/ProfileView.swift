@@ -31,7 +31,6 @@ struct ProfileView: View {
                 .foregroundStyle(.tint)
             Text("Hello, world!")
             Spacer()
-            NavBarView(activeView: $activeView)
             
         }
         .navigationTitle("profile")
