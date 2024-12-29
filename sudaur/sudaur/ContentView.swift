@@ -9,9 +9,9 @@ import SwiftUI
 import FirebaseAuth
 
 enum ActiveView {
-    case home
-    case profile
+    case feed
     case browse
+    case profile
 }
 class UserAuthentication: ObservableObject {
     @Published var isAuthenticated = false
@@ -19,7 +19,7 @@ class UserAuthentication: ObservableObject {
 
 struct ContentView: View {
     @StateObject private var userAuth = UserAuthentication()
-    @State private var activeView: ActiveView = .home
+    @State private var activeView: ActiveView = .feed
 
 
         var body: some View {

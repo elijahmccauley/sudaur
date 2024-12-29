@@ -16,8 +16,8 @@ struct MainView: View {
             Text("Sudaur")
             Spacer()
             switch activeView {
-                        case .home:
-                            LoginView()
+                        case .feed:
+                            FeedView()
                         case .browse:
                             BrowseView()
                         case .profile:

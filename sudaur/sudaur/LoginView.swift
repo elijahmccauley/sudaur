@@ -64,6 +64,7 @@ struct LoginView: View {
                 print("User signed in: \(result?.user.email ?? "No email")")
                 // You can navigate to the next screen here using a NavigationLink or other navigation methods
                 self.errorMessage = "success"
+                userAuth.isAuthenticated = true
             }
         }
     }

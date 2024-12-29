@@ -12,9 +12,9 @@ struct NavBarView: View {
     var body: some View {
         HStack {
             Button(action: {
-                activeView = .home
+                activeView = .feed
             }) {
-                Text("Home")
+                Text("Feed")
             }
             Spacer()
             Button(action: {
