@@ -8,28 +8,48 @@
 import SwiftUI
 import FirebaseAuth
 
+enum ActiveView {
+    case home
+    case profile
+    case messages
+}
+
 struct ContentView: View {
+    @State private var activeView: ActiveView = .home
 
     var body: some View {
         VStack {
             Text("Sudaur")
             Spacer()
-            HStack (alignment: .bottom) {
-                Spacer()
-                Image(systemName: "house")
-                    .imageScale(.large)
-                Spacer()
-                Image(systemName: "message")
-                    .imageScale(.large)
-                Spacer()
-                Image(systemName: "person.circle.fill")
-                    .imageScale(.large)
-                Spacer()
-                
-            }
+            switch activeView {
+                        case .home:
+                            LoginView()
+                        case .messages:
+                            ProfileView()
+                        case .profile:
+                            ProfileView()
+                        }
+
+            Spacer()
+            NavBarView(activeView: $activeView)
+
         }
         .padding()
         
+        
+    }
+}
+
+struct ProfileView2: View {
+    var body: some View {
+         NavigationView {
+             List {
+                 NavigationLink(destination: ContentView()) {
+                     Text("Login")
+                 }
+             }
+             .navigationBarTitle(Text("Master"))
+         }
         
     }
 }
