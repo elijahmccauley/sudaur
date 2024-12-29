@@ -18,9 +18,9 @@ struct NavBarView: View {
             }
             Spacer()
             Button(action: {
-                activeView = .messages
+                activeView = .browse
             }) {
-                Text("Messages")
+                Text("Browse")
             }
             Spacer()
             Button(action: {

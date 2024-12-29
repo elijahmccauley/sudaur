@@ -11,7 +11,7 @@ import FirebaseAuth
 enum ActiveView {
     case home
     case profile
-    case messages
+    case browse
 }
 
 struct ContentView: View {
@@ -24,8 +24,8 @@ struct ContentView: View {
             switch activeView {
                         case .home:
                             LoginView()
-                        case .messages:
-                            ProfileView()
+                        case .browse:
+                            BrowseView()
                         case .profile:
                             ProfileView()
                         }
@@ -35,8 +35,6 @@ struct ContentView: View {
 
         }
         .padding()
-        
-        
     }
 }
 
