@@ -17,11 +17,13 @@ struct MainView: View {
             Spacer()
             switch activeView {
                         case .feed:
-                            FeedView()
+                            FeedView(activeView: $activeView)
                         case .browse:
                             BrowseView()
                         case .profile:
                             ProfileView()
+                        case .messages:
+                            MessageView()
                         }
 
             Spacer()

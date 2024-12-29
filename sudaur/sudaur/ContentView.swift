@@ -12,6 +12,7 @@ enum ActiveView {
     case feed
     case browse
     case profile
+    case messages
 }
 class UserAuthentication: ObservableObject {
     @Published var isAuthenticated = false

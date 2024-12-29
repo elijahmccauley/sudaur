@@ -9,11 +9,30 @@ import SwiftUI
 
 struct FeedView: View {
     @EnvironmentObject var userAuth: UserAuthentication
+    @Binding var activeView: ActiveView
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack() {
+            Spacer()
+            Text("Activity")
+            Button(action: {
+                activeView = .messages
+            }) {
+                Text("Messages")
+            }
+                    
+        }
+        Text("Feed!")
+        Spacer()
     }
 }
 
-#Preview {
-    FeedView()
+struct MessageView: View {
+    @EnvironmentObject var userAuth: UserAuthentication
+    var body: some View {
+        List {
+            Text("message1")
+            Text("message2")
+        }
+    }
 }
+
