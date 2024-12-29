@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var activeView: ActiveView = .profile
+    @EnvironmentObject var userAuth: UserAuthentication
     var body: some View {
         VStack {
             HStack {

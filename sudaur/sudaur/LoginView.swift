@@ -14,36 +14,42 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage = ""
+    @EnvironmentObject var userAuth: UserAuthentication
+    @State private var showSignup = false
     
     var body: some View {
         VStack {
-            Text("Login")
-                .font(.largeTitle)
-                .padding()
-            
-            TextField("Email", text: $email)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .autocapitalization(.none)
-            
-            SecureField("Password", text: $password)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
-                    .foregroundColor(.red)
+            if showSignup {
+                SignupView(showSignup: $showSignup)
+            } else {
+                Text("Login")
+                    .font(.largeTitle)
                     .padding()
+                
+                TextField("Email", text: $email)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)
+                
+                SecureField("Password", text: $password)
+                    .padding()
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                if !errorMessage.isEmpty {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
+                
+                Button("Sign In") {
+                    signIn(email: email, password: password)
+                }
+                .padding()
+                Button("Create New User") {
+                    showSignup = true
+                }
+                .padding()
             }
-            
-            Button("Sign In") {
-                signIn(email: email, password: password)
-            }
-            .padding()
-            Button("Create New User") {
-                createUser(email: email, password: password)
-            }
-            .padding()
         }
         .padding()
     }
@@ -58,19 +64,6 @@ struct LoginView: View {
                 print("User signed in: \(result?.user.email ?? "No email")")
                 // You can navigate to the next screen here using a NavigationLink or other navigation methods
                 self.errorMessage = "success"
-            }
-        }
-    }
-    
-    func createUser(email: String, password: String) {
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-          // ...
-            if let error = error {
-                self.errorMessage = error.localizedDescription
-
-                    }
-            else{
-                print("User created successfully: \(authResult?.user.email ?? "")")
             }
         }
     }

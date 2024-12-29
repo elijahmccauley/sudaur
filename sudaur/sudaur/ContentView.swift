@@ -13,43 +13,28 @@ enum ActiveView {
     case profile
     case browse
 }
-
-struct ContentView: View {
-    @State private var activeView: ActiveView = .home
-
-    var body: some View {
-        VStack {
-            Text("Sudaur")
-            Spacer()
-            switch activeView {
-                        case .home:
-                            LoginView()
-                        case .browse:
-                            BrowseView()
-                        case .profile:
-                            ProfileView()
-                        }
-
-            Spacer()
-            NavBarView(activeView: $activeView)
-
-        }
-        .padding()
-    }
+class UserAuthentication: ObservableObject {
+    @Published var isAuthenticated = false
 }
 
-struct ProfileView2: View {
-    var body: some View {
-         NavigationView {
-             List {
-                 NavigationLink(destination: ContentView()) {
-                     Text("Login")
-                 }
-             }
-             .navigationBarTitle(Text("Master"))
-         }
-        
-    }
+struct ContentView: View {
+    @StateObject private var userAuth = UserAuthentication()
+    @State private var activeView: ActiveView = .home
+
+
+        var body: some View {
+            VStack {
+                if userAuth.isAuthenticated {
+                    // Main View with Header and NavBar
+                    MainView(activeView: $activeView)
+                        .environmentObject(userAuth)
+                } else {
+                    // Show Login View
+                    LoginView()
+                        .environmentObject(userAuth)
+                }
+            }
+        }
 }
 
 #Preview {
