@@ -9,9 +9,11 @@ import SwiftUI
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseCore
 
 
 struct SignupView: View {
+    let db = Firestore.firestore()
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage = ""
@@ -87,6 +89,18 @@ struct SignupView: View {
                     }
             else{
                 print("User created successfully: \(authResult?.user.email ?? "")")
+                db.collection("users").document(email).setData([
+                        "name": name,
+                        "sport": sport,
+                        "school": school
+                    ]) { error in
+                        if let error = error {
+                            print("Error writing document: \(error)")
+                        } else {
+                            print("Document successfully written!")
+                        }
+                    }
+                
                 userAuth.isAuthenticated = true
             }
         }

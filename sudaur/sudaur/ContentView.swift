@@ -7,6 +7,8 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseCore
+import FirebaseFirestore
 
 enum ActiveView {
     case feed
@@ -17,10 +19,12 @@ enum ActiveView {
     case settings
 }
 class UserAuthentication: ObservableObject {
-    @Published var isAuthenticated = true
+    @Published var isAuthenticated = false
 }
 
 struct ContentView: View {
+    let db = Firestore.firestore()
+    
     @StateObject private var userAuth = UserAuthentication()
     @State private var activeView: ActiveView = .feed
 
