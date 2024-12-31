@@ -13,9 +13,11 @@ enum ActiveView {
     case browse
     case profile
     case messages
+    case activity
+    case settings
 }
 class UserAuthentication: ObservableObject {
-    @Published var isAuthenticated = false
+    @Published var isAuthenticated = true
 }
 
 struct ContentView: View {

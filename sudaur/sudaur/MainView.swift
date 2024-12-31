@@ -13,7 +13,31 @@ struct MainView: View {
     
     var body: some View {
         VStack {
-            Text("Sudaur")
+            HStack {
+                Text("Sudaur")
+                switch activeView {
+                case .feed:
+                    Button(action: {
+                        activeView = .activity
+                    }) {
+                        Text("Activity")
+                    }
+                    Button(action: {
+                        activeView = .messages
+                    }) {
+                        Text("Messages")
+                    }
+                case .profile:
+                    Button(action: {
+                        activeView = .settings
+                    }) {
+                        Text("Settings")
+                    }
+                default:
+                    Text("")
+                    
+                }
+            }
             Spacer()
             switch activeView {
                         case .feed:
@@ -24,6 +48,10 @@ struct MainView: View {
                             ProfileView()
                         case .messages:
                             MessageView()
+                        case .activity:
+                            ActivityView()
+                        case .settings:
+                            SettingsView()
                         }
 
             Spacer()

@@ -6,12 +6,19 @@
 //
 
 import SwiftUI
+import Foundation
 import FirebaseAuth
+import FirebaseFirestore
+
 
 struct SignupView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage = ""
+    @State private var name = ""
+    @State private var school = ""
+    @State private var gender = ""
+    @State private var sport = ""
     @Binding var showSignup: Bool
     @EnvironmentObject var userAuth: UserAuthentication
     var body: some View {
@@ -28,6 +35,22 @@ struct SignupView: View {
             SecureField("Password", text: $password)
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+            TextField("Name", text: $name)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
+            TextField("School", text: $school)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
+            TextField("Gender", text: $gender)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
+            TextField("Sport", text: $sport)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
             
             if !errorMessage.isEmpty {
                 Text(errorMessage)
@@ -38,7 +61,6 @@ struct SignupView: View {
             Button(action: {
                         // Perform signup logic
                         // On success:
-                userAuth.isAuthenticated = true
                 createUser(email: email, password: password)
             }) {
                 Text("Signup")
@@ -65,7 +87,9 @@ struct SignupView: View {
                     }
             else{
                 print("User created successfully: \(authResult?.user.email ?? "")")
+                userAuth.isAuthenticated = true
             }
         }
+        
     }
 }

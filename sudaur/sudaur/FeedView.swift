@@ -11,16 +11,7 @@ struct FeedView: View {
     @EnvironmentObject var userAuth: UserAuthentication
     @Binding var activeView: ActiveView
     var body: some View {
-        HStack() {
-            Spacer()
-            Text("Activity")
-            Button(action: {
-                activeView = .messages
-            }) {
-                Text("Messages")
-            }
-                    
-        }
+        
         Text("Feed!")
         Spacer()
     }
