@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct ProfileView: View {
+    let db = Firestore.firestore()
     @State private var activeView: ActiveView = .profile
     @EnvironmentObject var userAuth: UserAuthentication
     var body: some View {
@@ -17,6 +19,7 @@ struct ProfileView: View {
                     .imageScale(.large)
                     .foregroundStyle(.tint)
                 VStack {
+                    
                     Text("Name")
                     Text("School")
                     Text("Sport/Position")
