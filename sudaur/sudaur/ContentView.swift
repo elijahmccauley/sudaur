@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
+import Foundation
 
 enum ActiveView {
     case feed
@@ -20,6 +21,15 @@ enum ActiveView {
 }
 class UserAuthentication: ObservableObject {
     @Published var isAuthenticated = false
+}
+
+struct User: Identifiable, Codable {
+    var id: String { email }
+    var email: String
+    var name: String?
+    var sport: String?
+    var school: String?
+    var gender: String?
 }
 
 struct ContentView: View {

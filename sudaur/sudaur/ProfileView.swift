@@ -7,9 +7,12 @@
 
 import SwiftUI
 import FirebaseFirestore
+import FirebaseAuth
 
 struct ProfileView: View {
     let db = Firestore.firestore()
+    @State private var documentData: [String: Any]? = nil
+    @State private var errorMessage: String? = nil
     @State private var activeView: ActiveView = .profile
     @EnvironmentObject var userAuth: UserAuthentication
     var body: some View {
@@ -20,9 +23,13 @@ struct ProfileView: View {
                     .foregroundStyle(.tint)
                 VStack {
                     
-                    Text("Name")
-                    Text("School")
-                    Text("Sport/Position")
+                    if let data = documentData {
+                        Text(data["name"] as? String ?? "Name")
+                        Text(data["school"] as? String ?? "School")
+                        Text(data["sport"] as? String ?? "Sport/Position")
+                    } else {
+                        Text("Loading...")
+                    }
                 }
             }
             Spacer()
@@ -36,11 +43,28 @@ struct ProfileView: View {
             Text("Hello, world!")
             Spacer()
             
+            
         }
         .navigationTitle("profile")
         .padding()
+        .task {
+            await fetchUserData()
+        }
         
     }
+    func fetchUserData() async {
+            let docRef = db.collection("users").document("e@s.com")
+            do {
+                let document = try await docRef.getDocument()
+                if document.exists {
+                    documentData = document.data()
+                } else {
+                    errorMessage = "Document does not exist"
+                }
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
 }
 
 #Preview {
