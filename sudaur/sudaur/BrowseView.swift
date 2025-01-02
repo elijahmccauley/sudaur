@@ -43,6 +43,14 @@ struct BrowseView: View {
             .padding()
         }
     }
+    func filteredData() -> [String] {
+        let allData = ["Item 1", "Item 2", "Item 3", "Item 4"]
+        if selectedCategory == "All" {
+            return allData
+        } else {
+            return allData.filter { $0.contains(selectedCategory) }
+        }
+    }
 }
 
 #Preview {

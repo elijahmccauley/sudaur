@@ -20,7 +20,7 @@ enum ActiveView {
     case settings
 }
 class UserAuthentication: ObservableObject {
-    @Published var isAuthenticated = false
+    @Published var isAuthenticated = true
     @Published var email: String?
 }
 
