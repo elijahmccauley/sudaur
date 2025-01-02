@@ -21,6 +21,7 @@ enum ActiveView {
 }
 class UserAuthentication: ObservableObject {
     @Published var isAuthenticated = false
+    @Published var email: String?
 }
 
 struct User: Identifiable, Codable {

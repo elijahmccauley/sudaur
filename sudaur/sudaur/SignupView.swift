@@ -100,7 +100,7 @@ struct SignupView: View {
                             print("Document successfully written!")
                         }
                     }
-                
+                userAuth.email = email
                 userAuth.isAuthenticated = true
             }
         }

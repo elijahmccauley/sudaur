@@ -48,12 +48,17 @@ struct ProfileView: View {
         .navigationTitle("profile")
         .padding()
         .task {
-            await fetchUserData()
+            if let email = userAuth.email {
+                await fetchUserData(email: email)
+            } else {
+                errorMessage = "not logged in"
+            }
+            
         }
         
     }
-    func fetchUserData() async {
-            let docRef = db.collection("users").document("e@s.com")
+    func fetchUserData(email: String) async {
+            let docRef = db.collection("users").document(email)
             do {
                 let document = try await docRef.getDocument()
                 if document.exists {
