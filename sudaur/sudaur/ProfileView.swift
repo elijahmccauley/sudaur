@@ -25,8 +25,11 @@ struct ProfileView: View {
                     
                     if let data = documentData {
                         Text(data["name"] as? String ?? "Name")
+                            .padding()
                         Text(data["school"] as? String ?? "School")
+                            .padding()
                         Text(data["sport"] as? String ?? "Sport/Position")
+                            .padding()
                     } else {
                         Text("Loading...")
                     }

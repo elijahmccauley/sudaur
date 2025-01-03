@@ -14,13 +14,15 @@ import FirebaseCore
 
 struct SignupView: View {
     let db = Firestore.firestore()
+    let genders = ["M", "F"]
+    let sports = ["Cross Country", "Track and Field", "Football", "Basketball", "Baseball", "Volleyball", "Softball", "Soccer", "Lacrosse"]
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage = ""
     @State private var name = ""
     @State private var school = ""
-    @State private var gender = ""
-    @State private var sport = ""
+    @State private var selectedGender = "M"
+    @State private var selectedSport = "Cross Country"
     @Binding var showSignup: Bool
     @EnvironmentObject var userAuth: UserAuthentication
     var body: some View {
@@ -45,14 +47,20 @@ struct SignupView: View {
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.none)
-            TextField("Gender", text: $gender)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .autocapitalization(.none)
-            TextField("Sport", text: $sport)
-                .padding()
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .autocapitalization(.none)
+            Picker("Gender", selection: $selectedGender) {
+                ForEach(genders, id: \.self) { gender in Text(gender).tag(gender)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+            .padding()
+            .border(Color.black)
+            Picker("Sport", selection: $selectedSport) {
+                ForEach(sports, id: \.self) { sport in Text(sport).tag(sport)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+            .padding()
+            .border(Color.black)
             
             if !errorMessage.isEmpty {
                 Text(errorMessage)
@@ -91,8 +99,9 @@ struct SignupView: View {
                 print("User created successfully: \(authResult?.user.email ?? "")")
                 db.collection("users").document(email).setData([
                         "name": name,
-                        "sport": sport,
-                        "school": school
+                        "sport": selectedSport,
+                        "school": school,
+                        "gender": selectedGender
                     ]) { error in
                         if let error = error {
                             print("Error writing document: \(error)")
