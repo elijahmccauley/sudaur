@@ -18,6 +18,7 @@ struct NewProduct: View {
     @State private var amount = ""
     @State private var selectedCategory = "Nutrition"
     @State private var errorMessage = ""
+    @State private var successMessage = ""
 
     var body: some View {
         Text("Add a New Product")
@@ -45,6 +46,11 @@ struct NewProduct: View {
                 .foregroundColor(.red)
                 .padding()
         }
+        if !successMessage.isEmpty {
+            Text(successMessage)
+                .foregroundColor(.red)
+                .padding()
+        }
         
         Button(action: {
             createProduct(brand: brand, product: product, amount: amount, category: selectedCategory)
@@ -65,8 +71,10 @@ struct NewProduct: View {
             ]) { error in
             if let error = error {
                 print("Error writing document: \(error)")
+                successMessage = ""
             } else {
                 print("Document successfully written!")
+                successMessage = "Success"
             }
         }
     }
