@@ -56,7 +56,7 @@ struct BrowseView: View {
         if selectedCategory == "All" {
             return allProducts
         } else {
-            return allProducts.filter { $0.category as? String == selectedCategory }
+            return allProducts.filter { $0.category as String == selectedCategory }
         }
     }
     func fetchTileData() async {

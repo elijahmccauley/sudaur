@@ -14,11 +14,11 @@ struct TileView: View {
             Image("leon")
             .resizable()
             .aspectRatio(contentMode: .fit)
-            Text(product.brand as? String ?? "Unknown")
+            Text(product.brand as String)
                 .font(.headline)
                 .multilineTextAlignment(.center)
             
-            Text(product.amount as? String ?? "Unknown")
+            Text(product.amount as String)
                 .font(.headline)
                 .multilineTextAlignment(.center)
             //    .padding([.bottom], 20)
