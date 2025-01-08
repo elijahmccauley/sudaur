@@ -16,10 +16,17 @@ struct BrowseView: View {
             GridItem(.flexible())
     ]
     @State private var selectedCategory = "All"
+    @State private var selectedBrand = "All"
     let categories = ["All", "Apparel", "Nutrition", "Recovery", "Other"]
+    
     @EnvironmentObject var userAuth: UserAuthentication
     @State private var errorMessage = ""
     @State private var allProducts: [Product] = []
+    var brands: [String] {
+            let allBrands = allProducts.map { $0.brand }
+            let uniqueBrands = Set(allBrands)
+            return ["All"] + uniqueBrands.sorted()
+    }
     var body: some View {
         Text("Browse!")
         HStack {
@@ -31,6 +38,13 @@ struct BrowseView: View {
                 .padding()
             Picker("Filter", selection: $selectedCategory) {
                 ForEach(categories, id: \.self) { category in Text(category).tag(category)
+                }
+            }
+            .pickerStyle(MenuPickerStyle())
+            .padding()
+            .border(Color.black)
+            Picker("Filter", selection: $selectedBrand) {
+                ForEach(brands, id: \.self) { brand in Text(brand).tag(brand)
                 }
             }
             .pickerStyle(MenuPickerStyle())
@@ -53,10 +67,18 @@ struct BrowseView: View {
         
     }
     func filteredData() -> [Product] {
-        if selectedCategory == "All" {
+        if selectedCategory == "All" && selectedBrand == "All" {
             return allProducts
+        } else if selectedCategory == "All" {
+            return allProducts.filter {
+                $0.brand as String == selectedBrand
+            }
+        } else if selectedBrand == "All" {
+            return allProducts.filter {
+                $0.category as String == selectedCategory
+            }
         } else {
-            return allProducts.filter { $0.category as String == selectedCategory }
+            return allProducts.filter { $0.category as String == selectedCategory && $0.brand as String == selectedBrand}
         }
     }
     func fetchTileData() async {
