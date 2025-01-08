@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct BrowseView: View {
+    let db = Firestore.firestore()
+    
     let columns = [
             GridItem(.flexible()),
             GridItem(.flexible())
@@ -15,7 +18,8 @@ struct BrowseView: View {
     @State private var selectedCategory = "All"
     let categories = ["All", "Apparel", "Nutrition", "Recovery", "Other"]
     @EnvironmentObject var userAuth: UserAuthentication
-    
+    @State private var errorMessage = ""
+    @State private var allProducts = []
     var body: some View {
         Text("Browse!")
         HStack {
@@ -42,6 +46,11 @@ struct BrowseView: View {
             }
             .padding()
         }
+        Spacer()
+        .task {
+            await fetchTileData()
+        }
+        
     }
     func filteredData() -> [String] {
         let allData = ["Item 1", "Item 2", "Item 3", "Item 4"]
@@ -49,6 +58,17 @@ struct BrowseView: View {
             return allData
         } else {
             return allData.filter { $0.contains(selectedCategory) }
+        }
+    }
+    func fetchTileData() async {
+        do {
+          let querySnapshot = try await db.collection("products").getDocuments()
+          for document in querySnapshot.documents {
+              allProducts.append(document.data())
+            print("\(document.documentID) => \(document.data())")
+          }
+        } catch {
+          print("Error getting documents: \(error)")
         }
     }
 }

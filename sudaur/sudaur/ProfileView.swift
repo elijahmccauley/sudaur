@@ -72,7 +72,7 @@ struct ProfileView: View {
             } catch {
                 errorMessage = error.localizedDescription
             }
-        }
+    }
 }
 
 #Preview {
