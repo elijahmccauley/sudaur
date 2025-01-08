@@ -14,6 +14,7 @@ struct ProfileView: View {
     @State private var documentData: [String: Any]? = nil
     @State private var errorMessage: String? = nil
     @State private var activeView: ActiveView = .profile
+    @State private var newBio = ""
     @EnvironmentObject var userAuth: UserAuthentication
     var body: some View {
         VStack {
@@ -34,6 +35,20 @@ struct ProfileView: View {
                         Text("Loading...")
                     }
                 }
+            }
+            Text("Bio")
+            if let data = documentData {
+                if "" == data["bio"] as? String ?? "Bio"{
+                    TextField("Add a Bio", text: $newBio)
+                        .padding()
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .autocapitalization(.none)
+                } else {
+                    Text(data["bio"] as? String ?? "Bio")
+                }
+                
+            } else {
+                Text("Loading...")
             }
             Spacer()
             Text("Athlete Profile")
@@ -75,6 +90,4 @@ struct ProfileView: View {
     }
 }
 
-#Preview {
-    ProfileView()
-}
+

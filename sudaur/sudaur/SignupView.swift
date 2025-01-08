@@ -101,7 +101,8 @@ struct SignupView: View {
                         "name": name,
                         "sport": selectedSport,
                         "school": school,
-                        "gender": selectedGender
+                        "gender": selectedGender,
+                        "bio": ""
                     ]) { error in
                         if let error = error {
                             print("Error writing document: \(error)")

@@ -31,6 +31,7 @@ struct User: Identifiable, Codable {
     var sport: String?
     var school: String?
     var gender: String?
+    var bio: String?
 }
 
 struct ContentView: View {
