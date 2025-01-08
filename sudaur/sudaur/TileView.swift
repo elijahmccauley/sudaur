@@ -8,17 +8,19 @@
 import SwiftUI
 
 struct TileView: View {
-    @State private var productName = "p"
-    @State private var amount = "a"
+    let product: Product
     var body: some View {
         VStack {
             Image("leon")
             .resizable()
             .aspectRatio(contentMode: .fit)
-            Text(productName)
-            //.padding([.top], 10)
-            //    .font(.system(size: 20))
-            Text(amount)
+            Text(product.brand as? String ?? "Unknown")
+                .font(.headline)
+                .multilineTextAlignment(.center)
+            
+            Text(product.amount as? String ?? "Unknown")
+                .font(.headline)
+                .multilineTextAlignment(.center)
             //    .padding([.bottom], 20)
             //    .font(.system(size: 20))
         }
@@ -29,5 +31,5 @@ struct TileView: View {
 }
 
 #Preview {
-    TileView()
+    TileView(product: Product(id: "abc", brand: "nike", product: "pegs", category: "apparel", amount: "2"))
 }

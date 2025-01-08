@@ -19,7 +19,7 @@ struct BrowseView: View {
     let categories = ["All", "Apparel", "Nutrition", "Recovery", "Other"]
     @EnvironmentObject var userAuth: UserAuthentication
     @State private var errorMessage = ""
-    @State private var allProducts = []
+    @State private var allProducts: [Product] = []
     var body: some View {
         Text("Browse!")
         HStack {
@@ -39,8 +39,8 @@ struct BrowseView: View {
         }
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(0..<10) { index in
-                    TileView()
+                ForEach(filteredData()) { product in
+                    TileView(product: product)
                 .frame(height: 200)
                 }
             }
@@ -52,25 +52,38 @@ struct BrowseView: View {
         }
         
     }
-    func filteredData() -> [String] {
-        let allData = ["Item 1", "Item 2", "Item 3", "Item 4"]
+    func filteredData() -> [Product] {
         if selectedCategory == "All" {
-            return allData
+            return allProducts
         } else {
-            return allData.filter { $0.contains(selectedCategory) }
+            return allProducts.filter { $0.category as? String == selectedCategory }
         }
     }
     func fetchTileData() async {
         do {
           let querySnapshot = try await db.collection("products").getDocuments()
-          for document in querySnapshot.documents {
-              allProducts.append(document.data())
-            print("\(document.documentID) => \(document.data())")
-          }
+            allProducts = querySnapshot.documents.map { document in
+                        let data = document.data()
+                        return Product(
+                            id: document.documentID,
+                            brand: data["brand"] as? String ?? "Unknown",
+                            product: data["product"] as? String ?? "N/A",
+                            category: data["category"] as? String ?? "Other",
+                            amount: data["amount"] as? String ?? "Other"
+                        )
+                    }
         } catch {
           print("Error getting documents: \(error)")
         }
     }
+}
+
+struct Product: Identifiable {
+    var id: String // Document ID from Firestore
+    var brand: String
+    var product: String
+    var category: String
+    var amount: String
 }
 
 #Preview {
