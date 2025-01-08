@@ -50,6 +50,15 @@ struct ProfileView: View {
             } else {
                 Text("Loading...")
             }
+            Button(action: {
+                updateBio(bio: newBio, email: userAuth.email!)
+            }) {
+                Text("Create")
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
             Spacer()
             Text("Athlete Profile")
                 .font(.title)
@@ -87,6 +96,19 @@ struct ProfileView: View {
             } catch {
                 errorMessage = error.localizedDescription
             }
+    }
+    func updateBio(bio: String, email: String) {
+        db.collection("users").document(email).setData([
+            "bio": bio
+        ], merge: true) { error in
+            if let error = error {
+                print("Error writing document: \(error)")
+                
+            } else {
+                print("Document successfully written!")
+                
+            }
+        }
     }
 }
 
