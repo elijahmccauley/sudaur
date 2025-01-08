@@ -30,12 +30,11 @@ struct BrowseView: View {
     var body: some View {
         Text("Browse!")
         HStack {
+            Spacer()
             Text(" Filters ")
                 .border(Color.black)
                 .padding()
-            Text(" Brand ")
-                .border(Color.black)
-                .padding()
+            Spacer()
             Picker("Filter", selection: $selectedCategory) {
                 ForEach(categories, id: \.self) { category in Text(category).tag(category)
                 }
@@ -43,6 +42,7 @@ struct BrowseView: View {
             .pickerStyle(MenuPickerStyle())
             .padding()
             .border(Color.black)
+            Spacer()
             Picker("Filter", selection: $selectedBrand) {
                 ForEach(brands, id: \.self) { brand in Text(brand).tag(brand)
                 }
@@ -50,6 +50,7 @@ struct BrowseView: View {
             .pickerStyle(MenuPickerStyle())
             .padding()
             .border(Color.black)
+            Spacer()
         }
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
