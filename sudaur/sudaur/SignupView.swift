@@ -21,6 +21,7 @@ struct SignupView: View {
     @State private var errorMessage = ""
     @State private var name = ""
     @State private var school = ""
+    @State private var ighandle = ""
     @State private var selectedGender = "M"
     @State private var selectedSport = "Cross Country"
     @Binding var showSignup: Bool
@@ -61,6 +62,10 @@ struct SignupView: View {
             .pickerStyle(MenuPickerStyle())
             .padding()
             .border(Color.black)
+            TextField("Instagram Handle", text: $ighandle)
+                .padding()
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
             
             if !errorMessage.isEmpty {
                 Text(errorMessage)
@@ -102,7 +107,8 @@ struct SignupView: View {
                         "sport": selectedSport,
                         "school": school,
                         "gender": selectedGender,
-                        "bio": ""
+                        "bio": "",
+                        "ighandle": ighandle
                     ]) { error in
                         if let error = error {
                             print("Error writing document: \(error)")
