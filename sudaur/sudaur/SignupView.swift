@@ -108,7 +108,8 @@ struct SignupView: View {
                         "school": school,
                         "gender": selectedGender,
                         "bio": "",
-                        "ighandle": ighandle
+                        "ighandle": ighandle,
+                        "likedProducts": []
                     ]) { error in
                         if let error = error {
                             print("Error writing document: \(error)")
