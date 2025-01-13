@@ -21,6 +21,7 @@ struct ProfileView: View {
     @State private var sport = ""
     @State private var gender = ""
     @State private var bio = ""
+    @State private var likedProducts = []
     @EnvironmentObject var userAuth: UserAuthentication
     var body: some View {
         VStack {
@@ -127,6 +128,7 @@ struct ProfileView: View {
                     school = documentData?["school"] as? String ?? ""
                     sport = documentData?["sport"] as? String ?? ""
                     bio = documentData?["bio"] as? String ?? ""
+                    likedProducts = documentData?["likedProducts"] as? [String] ?? []
                 } else {
                     errorMessage = "Document does not exist"
                 }

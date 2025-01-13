@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseFirestore
+import FirebaseAuth
 
 struct BrowseView: View {
     let db = Firestore.firestore()
@@ -23,6 +24,9 @@ struct BrowseView: View {
     @State private var errorMessage = ""
     @State private var allProducts: [Product] = []
     @State private var likedProducts: [Product] = []
+    @State private var documentData: [String: Any]? = nil
+    @State private var userLikedProducts: [String] = []
+    
     var brands: [String] {
             let allBrands = allProducts.map { $0.brand }
             let uniqueBrands = Set(allBrands)
@@ -30,6 +34,7 @@ struct BrowseView: View {
     }
     var body: some View {
         Text("Browse!")
+        Text(errorMessage)
         HStack {
             Spacer()
             Text(" Filters ")
@@ -59,7 +64,14 @@ struct BrowseView: View {
                     TileView(product: product)
                         .frame(height: 200)
                         .onTapGesture {
-                            toggleLike(product: product)
+                            if let email = userAuth.email {
+                                Task {
+                                    await toggleLike(product: product, email: email)
+                                }
+                                
+                            } else {
+                                errorMessage = "not logged in"
+                            }
                         }
                         .overlay(
                             likedProducts.contains(product) ?
@@ -92,9 +104,17 @@ struct BrowseView: View {
                     }
         Spacer()
         .task {
-            await fetchTileData()
+            do {
+                    await fetchTileData() // Load products first
+                    if let email = userAuth.email {
+                        await fetchUserData(email: email) // Fetch user-specific data
+                    } else {
+                        errorMessage = "Not logged in"
+                    }
+                } catch {
+                    errorMessage = "Failed to load data: \(error.localizedDescription)"
+                }
         }
-        
     }
     func filteredData() -> [Product] {
         if selectedCategory == "All" && selectedBrand == "All" {
@@ -128,12 +148,45 @@ struct BrowseView: View {
           print("Error getting documents: \(error)")
         }
     }
-    func toggleLike(product: Product) {
+    func toggleLike(product: Product, email: String) async {
         if let index = likedProducts.firstIndex(of: product) {
-            likedProducts.remove(at: index) // Unlike if already liked
-        } else {
-            likedProducts.append(product) // Add to liked products
+                // If the product is already liked, remove it
+                likedProducts.remove(at: index)
+                if let idIndex = userLikedProducts.firstIndex(of: product.id) {
+                    userLikedProducts.remove(at: idIndex)
+                }
+            } else {
+                // Add the product to liked products
+                likedProducts.append(product)
+                userLikedProducts.append(product.id)
+            }
+        let updatedData: [String: Any] = ["likedProducts": userLikedProducts]
+        do {
+            try await db.collection("users").document(email).setData(updatedData, merge: true)
+            print("Liked products updated successfully!")
+        } catch {
+            print("Error updating liked products: \(error.localizedDescription)")
         }
+
+    }
+    func fetchUserData(email: String) async {
+            let docRef = db.collection("users").document(email)
+            do {
+                let document = try await docRef.getDocument()
+                if document.exists {
+                    documentData = document.data()
+                    // Initialize local fields with fetched data
+                    
+                    userLikedProducts = documentData?["likedProducts"] as? [String] ?? []
+                    likedProducts = userLikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
+                    })
+                                }
+                } else {
+                    errorMessage = "Document does not exist"
+                }
+            } catch {
+                errorMessage = error.localizedDescription
+            }
     }
 }
 
@@ -147,4 +200,5 @@ struct Product: Identifiable, Equatable {
 
 #Preview {
     BrowseView()
+        .environmentObject(UserAuthentication())
 }
