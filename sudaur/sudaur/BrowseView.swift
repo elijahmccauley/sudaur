@@ -22,6 +22,7 @@ struct BrowseView: View {
     @EnvironmentObject var userAuth: UserAuthentication
     @State private var errorMessage = ""
     @State private var allProducts: [Product] = []
+    @State private var likedProducts: [Product] = []
     var brands: [String] {
             let allBrands = allProducts.map { $0.brand }
             let uniqueBrands = Set(allBrands)
@@ -56,11 +57,39 @@ struct BrowseView: View {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(filteredData()) { product in
                     TileView(product: product)
-                .frame(height: 200)
+                        .frame(height: 200)
+                        .onTapGesture {
+                            toggleLike(product: product)
+                        }
+                        .overlay(
+                            likedProducts.contains(product) ?
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.red)
+                                .padding(8)
+                                .background(Color.white.opacity(0.8))
+                                .clipShape(Circle())
+                                .padding(8)
+                            : nil,
+                            alignment: .topTrailing
+                        )
                 }
             }
             .padding()
         }
+        Text("Liked Products:")
+                        .font(.headline)
+                        .padding(.top)
+
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(likedProducts, id: \.id) { product in
+                                Text(product.brand) // Replace with product's name or identifier
+                                    .padding()
+                                    .background(Color.blue.opacity(0.2))
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
         Spacer()
         .task {
             await fetchTileData()
@@ -99,9 +128,16 @@ struct BrowseView: View {
           print("Error getting documents: \(error)")
         }
     }
+    func toggleLike(product: Product) {
+        if let index = likedProducts.firstIndex(of: product) {
+            likedProducts.remove(at: index) // Unlike if already liked
+        } else {
+            likedProducts.append(product) // Add to liked products
+        }
+    }
 }
 
-struct Product: Identifiable {
+struct Product: Identifiable, Equatable {
     var id: String // Document ID from Firestore
     var brand: String
     var product: String
