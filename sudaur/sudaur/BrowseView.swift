@@ -94,7 +94,7 @@ struct BrowseView: View {
                                 .clipShape(Circle())
                                 .padding(8)
                             : nil,
-                            alignment: .topTrailing
+                            alignment: .topLeading
                             
                         )
                         .overlay(
@@ -104,7 +104,7 @@ struct BrowseView: View {
                                 .padding()
                                 .background(Color.white.opacity(0.8))
                                 .clipShape(Circle())
-                                .padding()
+                                .padding(8)
                             : nil,
                             alignment: .topTrailing
                         )

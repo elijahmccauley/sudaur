@@ -15,14 +15,15 @@ struct ActivityView: View {
     @State private var errorMessage = ""
     @State private var allProducts: [Product] = []
     @State private var likedProducts: [Product] = []
+    @State private var dislikedProducts: [Product] = []
     @State private var documentData: [String: Any]? = nil
     @State private var userLikedProducts: [String] = []
+    @State private var userDislikedProducts: [String] = []
     var body: some View {
         Text("Activity!")
         Text("Liked Products:")
         .font(.headline)
         .padding(.top)
-
         ScrollView(.horizontal) {
             HStack {
                 ForEach(likedProducts, id: \.id) { product in
@@ -32,6 +33,31 @@ struct ActivityView: View {
                         .cornerRadius(8)
                 }
             }
+            
+        }
+        .task {
+            do {
+                    await fetchTileData() // Load products first
+                    if let email = userAuth.email {
+                        await fetchUserData(email: email) // Fetch user-specific data
+                    } else {
+                        errorMessage = "Not logged in"
+                    }
+                } catch {
+                    errorMessage = "Failed to load data: \(error.localizedDescription)"
+                }
+        }
+        Text("Disliked Products:")
+        ScrollView(.horizontal) {
+            HStack {
+                ForEach(dislikedProducts, id: \.id) { product in
+                    Text(product.brand)
+                        .padding()
+                        .background(Color.blue.opacity(0.2))
+                        .cornerRadius(8)
+                }
+            }
+            
         }
         .task {
             do {
@@ -73,6 +99,10 @@ struct ActivityView: View {
                     
                     userLikedProducts = documentData?["likedProducts"] as? [String] ?? []
                     likedProducts = userLikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
+                    })
+                                }
+                    userDislikedProducts = documentData?["dislikedProducts"] as? [String] ?? []
+                    dislikedProducts = userDislikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
                     })
                                 }
                 } else {
