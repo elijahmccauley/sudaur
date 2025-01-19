@@ -24,8 +24,10 @@ struct BrowseView: View {
     @State private var errorMessage = ""
     @State private var allProducts: [Product] = []
     @State private var likedProducts: [Product] = []
+    @State private var dislikedProducts: [Product] = []
     @State private var documentData: [String: Any]? = nil
     @State private var userLikedProducts: [String] = []
+    @State private var userDislikedProducts: [String] = []
     
     var brands: [String] {
             let allBrands = allProducts.map { $0.brand }
@@ -73,6 +75,16 @@ struct BrowseView: View {
                                 errorMessage = "not logged in"
                             }
                         }
+                        .onLongPressGesture {
+                            if let email = userAuth.email {
+                                Task {
+                                    await toggleDislike(product: product, email: email)
+                                }
+                                
+                            } else {
+                                errorMessage = "not logged in"
+                            }
+                        }
                         .overlay(
                             likedProducts.contains(product) ?
                             Image(systemName: "heart.fill")
@@ -81,6 +93,18 @@ struct BrowseView: View {
                                 .background(Color.white.opacity(0.8))
                                 .clipShape(Circle())
                                 .padding(8)
+                            : nil,
+                            alignment: .topTrailing
+                            
+                        )
+                        .overlay(
+                            dislikedProducts.contains(product) ?
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.blue)
+                                .padding()
+                                .background(Color.white.opacity(0.8))
+                                .clipShape(Circle())
+                                .padding()
                             : nil,
                             alignment: .topTrailing
                         )
@@ -169,6 +193,27 @@ struct BrowseView: View {
         }
 
     }
+    func toggleDislike(product: Product, email: String) async {
+        if let index = dislikedProducts.firstIndex(of: product) {
+                // If the product is already disliked, remove it
+                dislikedProducts.remove(at: index)
+                if let idIndex = userDislikedProducts.firstIndex(of: product.id) {
+                    userDislikedProducts.remove(at: idIndex)
+                }
+            } else {
+                // Add the product to liked products
+                dislikedProducts.append(product)
+                userDislikedProducts.append(product.id)
+            }
+        let updatedData: [String: Any] = ["dislikedProducts": userDislikedProducts]
+        do {
+            try await db.collection("users").document(email).setData(updatedData, merge: true)
+            print("Disliked products updated successfully!")
+        } catch {
+            print("Error updating liked products: \(error.localizedDescription)")
+        }
+
+    }
     func fetchUserData(email: String) async {
             let docRef = db.collection("users").document(email)
             do {
@@ -179,6 +224,10 @@ struct BrowseView: View {
                     
                     userLikedProducts = documentData?["likedProducts"] as? [String] ?? []
                     likedProducts = userLikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
+                    })
+                                }
+                    userDislikedProducts = documentData?["dislikedProducts"] as? [String] ?? []
+                    dislikedProducts = userDislikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
                     })
                                 }
                 } else {

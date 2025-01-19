@@ -34,6 +34,7 @@ struct User: Identifiable, Codable {
     var bio: String?
     var ighandle: String?
     var likedProducts: [String]?
+    var dislikedProducts: [String]?
 }
 
 struct ContentView: View {
