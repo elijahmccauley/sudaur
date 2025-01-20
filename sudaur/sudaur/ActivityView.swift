@@ -28,13 +28,25 @@ struct ActivityView: View {
     
     var body: some View {
         Text("Activity!")
-        Picker("Filter", selection: $selectedType) {
-            ForEach(filters, id: \.self) { filter in Text(filter).tag(filter)
+        HStack {
+            Button(action: {
+                selectedType = "Likes"
+            }) {
+                Text("Likes")
+            }
+            Spacer()
+            Button(action: {
+                selectedType = "Matches"
+            }) {
+                Text("Matches")
+            }
+            Spacer()
+            Button(action: {
+                selectedType = "Dislikes"
+            }) {
+                Text("Dislikes")
             }
         }
-        .pickerStyle(MenuPickerStyle())
-        .padding()
-        .border(Color.black)
         ScrollView {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(filteredData()) { product in
