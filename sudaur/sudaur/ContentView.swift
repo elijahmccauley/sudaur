@@ -18,6 +18,7 @@ enum ActiveView {
     case messages
     case activity
     case settings
+    case swipe
 }
 class UserAuthentication: ObservableObject {
     @Published var isAuthenticated = false

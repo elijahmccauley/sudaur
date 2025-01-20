@@ -29,7 +29,7 @@ struct MainView: View {
                     }
                 case .profile:
                     Button(action: {
-                        activeView = .settings
+                        activeView = .swipe
                     }) {
                         Text("Settings")
                     }
@@ -40,19 +40,21 @@ struct MainView: View {
             }
             Spacer()
             switch activeView {
-                        case .feed:
-                            FeedView(activeView: $activeView)
-                        case .browse:
-                            BrowseView()
-                        case .profile:
-                            ProfileView()
-                        case .messages:
-                            MessageView()
-                        case .activity:
-                            ActivityView()
-                        case .settings:
-                            SettingsView()
-                        }
+                case .feed:
+                    FeedView(activeView: $activeView)
+                case .browse:
+                    BrowseView()
+                case .profile:
+                    ProfileView()
+                case .messages:
+                    MessageView()
+                case .activity:
+                    ActivityView()
+                case .settings:
+                    SettingsView()
+                case .swipe:
+                    TileStackView()
+            }
 
             Spacer()
             NavBarView(activeView: $activeView)
