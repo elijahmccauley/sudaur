@@ -10,12 +10,15 @@ import SwiftUI
 struct NavBarView: View {
     @Binding var activeView: ActiveView
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
+            Spacer()
             Button(action: {
                 activeView = .feed
             }) {
                 Text("Feed")
             }
+            
+            
             Spacer()
             Button(action: {
                 activeView = .browse
@@ -28,6 +31,7 @@ struct NavBarView: View {
             }) {
                 Text("Profile")
             }
+            Spacer()
         }
         
     }
