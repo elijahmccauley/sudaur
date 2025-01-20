@@ -99,8 +99,8 @@ struct BrowseView: View {
                         )
                         .overlay(
                             dislikedProducts.contains(product) ?
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(.blue)
+                            Image(systemName: "x.circle.fill")
+                                .foregroundColor(.red)
                                 .padding()
                                 .background(Color.white.opacity(0.8))
                                 .clipShape(Circle())

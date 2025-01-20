@@ -43,8 +43,8 @@ struct ActivityView: View {
             Button(action: {
                 selectedType = "Matches"
             }) {
-                Image(systemName: "heart.fill")
-                    .foregroundColor(.yellow)
+                Image(systemName: "arrow.left.arrow.right")
+                    .foregroundColor(.blue)
                     .padding(8)
                     .background(Color.white.opacity(0.8))
                     .clipShape(Circle())
@@ -54,8 +54,8 @@ struct ActivityView: View {
             Button(action: {
                 selectedType = "Dislikes"
             }) {
-                Image(systemName: "heart.fill")
-                    .foregroundColor(.blue)
+                Image(systemName: "x.circle.fill")
+                    .foregroundColor(.red)
                     .padding(8)
                     .background(Color.white.opacity(0.8))
                     .clipShape(Circle())
