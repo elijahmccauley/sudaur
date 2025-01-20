@@ -11,6 +11,11 @@ import FirebaseFirestore
 
 struct ActivityView: View {
     let db = Firestore.firestore()
+    let columns = [
+            GridItem(.flexible()),
+            GridItem(.flexible())
+    ]
+    let filters = ["Likes", "Matches", "Dislikes"]
     @EnvironmentObject var userAuth: UserAuthentication
     @State private var errorMessage = ""
     @State private var allProducts: [Product] = []
@@ -19,8 +24,49 @@ struct ActivityView: View {
     @State private var documentData: [String: Any]? = nil
     @State private var userLikedProducts: [String] = []
     @State private var userDislikedProducts: [String] = []
+    @State private var selectedType = "Likes"
+    
     var body: some View {
         Text("Activity!")
+        Picker("Filter", selection: $selectedType) {
+            ForEach(filters, id: \.self) { filter in Text(filter).tag(filter)
+            }
+        }
+        .pickerStyle(MenuPickerStyle())
+        .padding()
+        .border(Color.black)
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(filteredData()) { product in
+                    TileView(product: product)
+                        .frame(height: 200)
+                        .overlay(
+                            likedProducts.contains(product) ?
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.red)
+                                .padding(8)
+                                .background(Color.white.opacity(0.8))
+                                .clipShape(Circle())
+                                .padding(8)
+                            : nil,
+                            alignment: .topLeading
+                            
+                        )
+                        .overlay(
+                            dislikedProducts.contains(product) ?
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.blue)
+                                .padding()
+                                .background(Color.white.opacity(0.8))
+                                .clipShape(Circle())
+                                .padding(8)
+                            : nil,
+                            alignment: .topTrailing
+                        )
+                }
+            }
+            .padding()
+        }
         Text("Liked Products:")
         .font(.headline)
         .padding(.top)
@@ -111,6 +157,15 @@ struct ActivityView: View {
             } catch {
                 errorMessage = error.localizedDescription
             }
+    }
+    func filteredData() -> [Product] {
+        if selectedType == "Likes" {
+            return likedProducts
+        } else if selectedType == "Matches" {
+            return allProducts
+        } else {
+            return dislikedProducts
+        }
     }
 }
 
