@@ -32,19 +32,34 @@ struct ActivityView: View {
             Button(action: {
                 selectedType = "Likes"
             }) {
-                Text("Likes")
+                Image(systemName: "heart.fill")
+                    .foregroundColor(.red)
+                    .padding(8)
+                    .background(Color.white.opacity(0.8))
+                    .clipShape(Circle())
+                    .padding(8)
             }
             Spacer()
             Button(action: {
                 selectedType = "Matches"
             }) {
-                Text("Matches")
+                Image(systemName: "heart.fill")
+                    .foregroundColor(.yellow)
+                    .padding(8)
+                    .background(Color.white.opacity(0.8))
+                    .clipShape(Circle())
+                    .padding(8)
             }
             Spacer()
             Button(action: {
                 selectedType = "Dislikes"
             }) {
-                Text("Dislikes")
+                Image(systemName: "heart.fill")
+                    .foregroundColor(.blue)
+                    .padding(8)
+                    .background(Color.white.opacity(0.8))
+                    .clipShape(Circle())
+                    .padding(8)
             }
         }
         ScrollView {
@@ -143,6 +158,4 @@ struct ActivityView: View {
     }
 }
 
-#Preview {
-    ActivityView()
-}
+
