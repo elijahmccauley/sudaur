@@ -67,44 +67,6 @@ struct ActivityView: View {
             }
             .padding()
         }
-        Text("Liked Products:")
-        .font(.headline)
-        .padding(.top)
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(likedProducts, id: \.id) { product in
-                    Text(product.brand)
-                        .padding()
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(8)
-                }
-            }
-            
-        }
-        .task {
-            do {
-                    await fetchTileData() // Load products first
-                    if let email = userAuth.email {
-                        await fetchUserData(email: email) // Fetch user-specific data
-                    } else {
-                        errorMessage = "Not logged in"
-                    }
-                } catch {
-                    errorMessage = "Failed to load data: \(error.localizedDescription)"
-                }
-        }
-        Text("Disliked Products:")
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(dislikedProducts, id: \.id) { product in
-                    Text(product.brand)
-                        .padding()
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(8)
-                }
-            }
-            
-        }
         .task {
             do {
                     await fetchTileData() // Load products first
