@@ -29,34 +29,31 @@ struct ProfileView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text("Name:")
-                        if isEditing {
-                            TextField("Enter your name", text: $name)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        } else {
-                            Text(data["name"] as? String ?? "Name")
-                        }
+                        Text(data["name"] as? String ?? "Name")
+                        
                     }
                     .padding()
 
                     HStack {
                         Text("School:")
-                        if isEditing {
-                            TextField("Enter your school", text: $school)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        } else {
-                            Text(data["school"] as? String ?? "School")
-                        }
+                        Text(data["school"] as? String ?? "School")
+                        
                     }
                     .padding()
 
                     HStack {
                         Text("Sport/Position:")
-                        if isEditing {
-                            TextField("Enter your sport/position", text: $sport)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        } else {
-                            Text(data["sport"] as? String ?? "Sport/Position")
-                        }
+                        Text(data["sport"] as? String ?? "Sport/Position")
+                        
+                    }
+                    .padding()
+                    HStack {
+                        Spacer()
+                        Text(data["ighandle"] as? String ?? "ighandle")
+                        Spacer()
+                        Text("Followers: 44.2K")
+                        Spacer()
+                        
                     }
                     .padding()
                     
