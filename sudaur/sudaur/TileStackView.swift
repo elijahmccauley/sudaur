@@ -27,6 +27,7 @@ struct TileStackView: View {
             }
         }
         .padding()
+        
         Text("Liked Products:")
         .font(.headline)
         .padding(.top)
