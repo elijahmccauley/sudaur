@@ -11,7 +11,7 @@ import FirebaseAuth
 
 struct BrowseView: View {
     let db = Firestore.firestore()
-    
+    @State private var tileMode = "grid"
     let columns = [
             GridItem(.flexible()),
             GridItem(.flexible())
@@ -39,9 +39,39 @@ struct BrowseView: View {
         Text(errorMessage)
         HStack {
             Spacer()
-            Text(" Filters ")
-                .border(Color.black)
-                .padding()
+            if tileMode == "grid" {
+                Button(action: {
+                    tileMode = "swipe"
+                }) {
+                    Image(systemName: "square.on.square")
+                        .foregroundColor(.black)
+                        .padding(8)
+                        .background(Color.white.opacity(1))
+                        .clipShape(Circle())
+                        .padding(8)
+                        .overlay(
+                            Circle()
+                                .stroke(.black, lineWidth: 2)
+                        )
+                }
+            } else {
+                Button(action: {
+                    tileMode = "grid"
+                }) {
+                    Image(systemName: "square.grid.3x3.square")
+                        .foregroundColor(.black)
+                        .padding(8)
+                        .background(Color.white.opacity(1))
+                        .clipShape(Circle())
+                        .padding(8)
+                        .overlay(
+                            Circle()
+                                .stroke(.black, lineWidth: 2)
+                        )
+                        
+                        
+                }
+            }
             Spacer()
             Picker("Filter", selection: $selectedCategory) {
                 ForEach(categories, id: \.self) { category in Text(category).tag(category)
@@ -60,58 +90,64 @@ struct BrowseView: View {
             .border(Color.black)
             Spacer()
         }
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(filteredData()) { product in
-                    TileView(product: product)
-                        .frame(height: 200)
-                        .onTapGesture {
-                            if let email = userAuth.email {
-                                Task {
-                                    await toggleLike(product: product, email: email)
+        if tileMode == "grid" {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    ForEach(filteredData()) { product in
+                        TileView(product: product)
+                            .frame(height: 200)
+                            .onTapGesture {
+                                if let email = userAuth.email {
+                                    Task {
+                                        await toggleLike(product: product, email: email)
+                                    }
+                                    
+                                } else {
+                                    errorMessage = "not logged in"
                                 }
-                                
-                            } else {
-                                errorMessage = "not logged in"
                             }
-                        }
-                        .onLongPressGesture {
-                            if let email = userAuth.email {
-                                Task {
-                                    await toggleDislike(product: product, email: email)
+                            .onLongPressGesture {
+                                if let email = userAuth.email {
+                                    Task {
+                                        await toggleDislike(product: product, email: email)
+                                    }
+                                    
+                                } else {
+                                    errorMessage = "not logged in"
                                 }
-                                
-                            } else {
-                                errorMessage = "not logged in"
                             }
-                        }
-                        .overlay(
-                            likedProducts.contains(product) ?
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(.red)
-                                .padding(8)
-                                .background(Color.white.opacity(0.8))
-                                .clipShape(Circle())
-                                .padding(8)
-                            : nil,
-                            alignment: .topLeading
-                            
-                        )
-                        .overlay(
-                            dislikedProducts.contains(product) ?
-                            Image(systemName: "x.circle.fill")
-                                .foregroundColor(.red)
-                                .padding()
-                                .background(Color.white.opacity(0.8))
-                                .clipShape(Circle())
-                                .padding(8)
-                            : nil,
-                            alignment: .topTrailing
-                        )
+                            .overlay(
+                                likedProducts.contains(product) ?
+                                Image(systemName: "heart.fill")
+                                    .foregroundColor(.red)
+                                    .padding(8)
+                                    .background(Color.white.opacity(0.8))
+                                    .clipShape(Circle())
+                                    .padding(8)
+                                : nil,
+                                alignment: .topLeading
+                                
+                            )
+                            .overlay(
+                                dislikedProducts.contains(product) ?
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundColor(.red)
+                                    .padding()
+                                    .background(Color.white.opacity(0.8))
+                                    .clipShape(Circle())
+                                    .padding(8)
+                                : nil,
+                                alignment: .topTrailing
+                            )
+                    }
                 }
+                .padding()
             }
-            .padding()
+            
+        } else {
+            TileStackView()
         }
+        
         Text("Liked Products:")
                         .font(.headline)
                         .padding(.top)
