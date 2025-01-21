@@ -14,6 +14,7 @@ struct SwipeCardView: View {
         @State private var rotation: Double = 0
     
     var body: some View {
+        
         VStack {
                     Image("leon")
                         .resizable()

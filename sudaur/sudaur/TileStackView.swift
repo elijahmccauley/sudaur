@@ -18,6 +18,8 @@ struct TileStackView: View {
     @State private var allProducts: [Product] = []
     @State private var errorMessage = ""
     var body: some View {
+        Text("Swipe!")
+        .font(.headline)
         ZStack {
             ForEach(allProducts, id: \.id) { product in
                 if let index = allProducts.firstIndex(where: { $0.id == product.id }) {
