@@ -52,27 +52,21 @@ struct SwipeCardView: View {
                 )
                 .animation(.spring(), value: offset)
         HStack {
-            Button(action: {
-                print("dislike")
-            }) {
-                Image(systemName: "x.circle.fill")
+            Image(systemName: "x.circle.fill")
                     .foregroundColor(.red)
                     .padding(8)
                     .background(Color.white.opacity(0.8))
                     .clipShape(Circle())
                     .padding(8)
-            }
+            
             Spacer()
-            Button(action: {
-                print("like")
-            }) {
-                Image(systemName: "heart.fill")
+            Image(systemName: "heart.fill")
                     .foregroundColor(.red)
                     .padding(8)
                     .background(Color.white.opacity(0.8))
                     .clipShape(Circle())
                     .padding(8)
-            }
+            
         }
     }
 }
