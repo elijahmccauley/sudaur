@@ -21,11 +21,15 @@ struct TileStackView: View {
     @State private var userDislikedProducts: [String] = []
     @State private var documentData: [String: Any]? = nil
     var body: some View {
+        let unprocessedProducts = allProducts.filter { product in
+            !likedProducts.contains(where: { $0.id == product.id }) &&
+            !dislikedProducts.contains(where: { $0.id == product.id })
+        }
         Text("Swipe!")
         .font(.headline)
         ZStack {
-            ForEach(allProducts, id: \.id) { product in
-                if let index = allProducts.firstIndex(where: { $0.id == product.id }) {
+            ForEach(unprocessedProducts, id: \.id) { product in
+                if let index = unprocessedProducts.firstIndex(where: { $0.id == product.id }) {
                     SwipeCardView(product: product) { product, liked in
                         if let email = userAuth.email {
                             handleSwipe(product: product, liked: liked, email: email)
@@ -33,7 +37,7 @@ struct TileStackView: View {
                             errorMessage = "Not logged in"
                         }
                     }
-                    .zIndex(Double(allProducts.count - index)) // Stack cards with decreasing zIndex
+                    .zIndex(Double(unprocessedProducts.count - index)) // Stack cards with decreasing zIndex
                 }
             }
         }
