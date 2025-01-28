@@ -17,14 +17,23 @@ struct TileStackView: View {
     @State private var dislikedProducts: [Product] = []
     @State private var allProducts: [Product] = []
     @State private var errorMessage = ""
+    @State private var userLikedProducts: [String] = []
+    @State private var userDislikedProducts: [String] = []
+    @State private var documentData: [String: Any]? = nil
     var body: some View {
         Text("Swipe!")
         .font(.headline)
         ZStack {
             ForEach(allProducts, id: \.id) { product in
                 if let index = allProducts.firstIndex(where: { $0.id == product.id }) {
-                    SwipeCardView(product: product, onSwipe: handleSwipe)
-                        .zIndex(Double(allProducts.count - index)) // Stack cards with decreasing zIndex
+                    SwipeCardView(product: product) { product, liked in
+                        if let email = userAuth.email {
+                            handleSwipe(product: product, liked: liked, email: email)
+                        } else {
+                            errorMessage = "Not logged in"
+                        }
+                    }
+                    .zIndex(Double(allProducts.count - index)) // Stack cards with decreasing zIndex
                 }
             }
         }
@@ -47,6 +56,11 @@ struct TileStackView: View {
         .task {
             do {
                     await fetchTileData() // Load products first
+                    if let email = userAuth.email {
+                        await fetchUserData(email: email) // Fetch user-specific data
+                } else {
+                    errorMessage = "Not logged in"
+                }
                     
                 } catch {
                     errorMessage = "Failed to load data: \(error.localizedDescription)"
@@ -70,15 +84,84 @@ struct TileStackView: View {
           print("Error getting documents: \(error)")
         }
     }
-    private func handleSwipe(product: Product, liked: Bool) {
-        if let index = allProducts.firstIndex(of: product) {
-            if liked {
-                likedProducts.append(product)
+    func toggleLike(product: Product, email: String) async {
+        if let index = likedProducts.firstIndex(of: product) {
+                // If the product is already liked, remove it
+                likedProducts.remove(at: index)
+                if let idIndex = userLikedProducts.firstIndex(of: product.id) {
+                    userLikedProducts.remove(at: idIndex)
+                }
             } else {
-                dislikedProducts.append(product)
+                // Add the product to liked products
+                likedProducts.append(product)
+                userLikedProducts.append(product.id)
             }
-            allProducts.remove(at: index) // Remove swiped card from the stack
+        let updatedData: [String: Any] = ["likedProducts": userLikedProducts]
+        do {
+            try await db.collection("users").document(email).setData(updatedData, merge: true)
+            print("Liked products updated successfully!")
+        } catch {
+            print("Error updating liked products: \(error.localizedDescription)")
         }
+
+    }
+    func toggleDislike(product: Product, email: String) async {
+        if let index = dislikedProducts.firstIndex(of: product) {
+                // If the product is already disliked, remove it
+                dislikedProducts.remove(at: index)
+                if let idIndex = userDislikedProducts.firstIndex(of: product.id) {
+                    userDislikedProducts.remove(at: idIndex)
+                }
+            } else {
+                // Add the product to liked products
+                dislikedProducts.append(product)
+                userDislikedProducts.append(product.id)
+            }
+        let updatedData: [String: Any] = ["dislikedProducts": userDislikedProducts]
+        do {
+            try await db.collection("users").document(email).setData(updatedData, merge: true)
+            print("Disliked products updated successfully!")
+        } catch {
+            print("Error updating liked products: \(error.localizedDescription)")
+        }
+
+    }
+    private func handleSwipe(product: Product, liked: Bool, email: String) {
+            if let index = allProducts.firstIndex(of: product) {
+                if liked {
+                    Task {
+                        await toggleLike(product: product, email: email)
+                    }
+                } else {
+                    Task {
+                        await toggleDislike(product: product, email: email)
+                    }
+                }
+                allProducts.remove(at: index) // Remove swiped card from the stack
+            }
+        }
+    func fetchUserData(email: String) async {
+            let docRef = db.collection("users").document(email)
+            do {
+                let document = try await docRef.getDocument()
+                if document.exists {
+                    documentData = document.data()
+                    // Initialize local fields with fetched data
+                    
+                    userLikedProducts = documentData?["likedProducts"] as? [String] ?? []
+                    likedProducts = userLikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
+                    })
+                                }
+                    userDislikedProducts = documentData?["dislikedProducts"] as? [String] ?? []
+                    dislikedProducts = userDislikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
+                    })
+                                }
+                } else {
+                    errorMessage = "Document does not exist"
+                }
+            } catch {
+                errorMessage = error.localizedDescription
+            }
     }
 }
 
