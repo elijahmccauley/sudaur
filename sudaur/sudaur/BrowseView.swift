@@ -91,89 +91,23 @@ struct BrowseView: View {
             Spacer()
         }
         if tileMode == "grid" {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(filteredData()) { product in
-                        TileView(product: product)
-                            .frame(height: 200)
-                            .onTapGesture {
-                                if let email = userAuth.email {
-                                    Task {
-                                        await toggleLike(product: product, email: email)
-                                    }
-                                    
-                                } else {
-                                    errorMessage = "not logged in"
-                                }
-                            }
-                            .onLongPressGesture {
-                                if let email = userAuth.email {
-                                    Task {
-                                        await toggleDislike(product: product, email: email)
-                                    }
-                                    
-                                } else {
-                                    errorMessage = "not logged in"
-                                }
-                            }
-                            .overlay(
-                                likedProducts.contains(product) ?
-                                Image(systemName: "heart.fill")
-                                    .foregroundColor(.red)
-                                    .padding(8)
-                                    .background(Color.white.opacity(0.8))
-                                    .clipShape(Circle())
-                                    .padding(8)
-                                : nil,
-                                alignment: .topLeading
-                                
-                            )
-                            .overlay(
-                                dislikedProducts.contains(product) ?
-                                Image(systemName: "x.circle.fill")
-                                    .foregroundColor(.red)
-                                    .padding()
-                                    .background(Color.white.opacity(0.8))
-                                    .clipShape(Circle())
-                                    .padding(8)
-                                : nil,
-                                alignment: .topTrailing
-                            )
-                    }
-                }
-                .padding()
-            }
-            
+            TileGridView(selectedCategory: $selectedCategory, selectedBrand: $selectedBrand)
         } else {
-            TileStackView()
+            TileStackView(selectedCategory: $selectedCategory, selectedBrand: $selectedBrand)
         }
         
-        Text("Liked Products:")
-                        .font(.headline)
-                        .padding(.top)
-
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(likedProducts, id: \.id) { product in
-                                Text(product.brand) // Replace with product's name or identifier
-                                    .padding()
-                                    .background(Color.blue.opacity(0.2))
-                                    .cornerRadius(8)
-                            }
-                        }
-                    }
         Spacer()
         .task {
             do {
-                    await fetchTileData() // Load products first
-                    if let email = userAuth.email {
-                        await fetchUserData(email: email) // Fetch user-specific data
-                    } else {
-                        errorMessage = "Not logged in"
-                    }
-                } catch {
-                    errorMessage = "Failed to load data: \(error.localizedDescription)"
+                await fetchTileData() // Load products first
+                if let email = userAuth.email {
+                    await fetchUserData(email: email) // Fetch user-specific data
+                } else {
+                    errorMessage = "Not logged in"
                 }
+            } catch {
+                errorMessage = "Failed to load data: \(error.localizedDescription)"
+            }
         }
     }
     func filteredData() -> [Product] {

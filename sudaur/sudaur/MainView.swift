@@ -53,7 +53,7 @@ struct MainView: View {
                 case .settings:
                     SettingsView()
                 case .swipe:
-                    TileStackView()
+                    SettingsView()
             }
 
             Spacer()

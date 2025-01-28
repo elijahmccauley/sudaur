@@ -1,56 +1,90 @@
 //
-//  TileStackView.swift
+//  TileGridView.swift
 //  sudaur
 //
-//  Created by Elijah McCauley on 1/20/25.
+//  Created by Elijah McCauley on 1/27/25.
 //
 
 import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
 
-struct TileStackView: View {
+struct TileGridView: View {
     let db = Firestore.firestore()
-    
-    @EnvironmentObject var userAuth: UserAuthentication
-    @State private var likedProducts: [Product] = []
-    @State private var dislikedProducts: [Product] = []
-    @State private var allProducts: [Product] = []
-    @State private var errorMessage = ""
-    @State private var userLikedProducts: [String] = []
-    @State private var userDislikedProducts: [String] = []
-    @State private var documentData: [String: Any]? = nil
+    let columns = [
+            GridItem(.flexible()),
+            GridItem(.flexible())
+    ]
     @Binding var selectedCategory: String
     @Binding var selectedBrand: String
     let categories = ["All", "Apparel", "Nutrition", "Recovery", "Other"]
+    @EnvironmentObject var userAuth: UserAuthentication
+    @State private var errorMessage = ""
+    @State private var allProducts: [Product] = []
+    @State private var likedProducts: [Product] = []
+    @State private var dislikedProducts: [Product] = []
+    @State private var documentData: [String: Any]? = nil
+    @State private var userLikedProducts: [String] = []
+    @State private var userDislikedProducts: [String] = []
+    
     var brands: [String] {
             let allBrands = allProducts.map { $0.brand }
             let uniqueBrands = Set(allBrands)
             return ["All"] + uniqueBrands.sorted()
     }
     var body: some View {
-        let unprocessedProducts = filteredData().filter { product in
-            !likedProducts.contains(where: { $0.id == product.id }) &&
-            !dislikedProducts.contains(where: { $0.id == product.id })
-        }
-        Text("Swipe!")
-        .font(.headline)
-        ZStack {
-            ForEach(unprocessedProducts, id: \.id) { product in
-                if let index = unprocessedProducts.firstIndex(where: { $0.id == product.id }) {
-                    SwipeCardView(product: product) { product, liked in
-                        if let email = userAuth.email {
-                            handleSwipe(product: product, liked: liked, email: email)
-                        } else {
-                            errorMessage = "Not logged in"
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(filteredData()) { product in
+                    TileView(product: product)
+                        .frame(height: 200)
+                        .onTapGesture {
+                            if let email = userAuth.email {
+                                Task {
+                                    await toggleLike(product: product, email: email)
+                                }
+                                
+                            } else {
+                                errorMessage = "not logged in"
+                            }
                         }
-                    }
-                    .zIndex(Double(unprocessedProducts.count - index)) // Stack cards with decreasing zIndex
+                        .onLongPressGesture {
+                            if let email = userAuth.email {
+                                Task {
+                                    await toggleDislike(product: product, email: email)
+                                }
+                                
+                            } else {
+                                errorMessage = "not logged in"
+                            }
+                        }
+                        .overlay(
+                            likedProducts.contains(product) ?
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.red)
+                                .padding(8)
+                                .background(Color.white.opacity(0.8))
+                                .clipShape(Circle())
+                                .padding(8)
+                            : nil,
+                            alignment: .topLeading
+                            
+                        )
+                        .overlay(
+                            dislikedProducts.contains(product) ?
+                            Image(systemName: "x.circle.fill")
+                                .foregroundColor(.red)
+                                .padding()
+                                .background(Color.white.opacity(0.8))
+                                .clipShape(Circle())
+                                .padding(8)
+                            : nil,
+                            alignment: .topTrailing
+                        )
                 }
             }
+            .padding()
         }
-        .padding()
-        
         Text("Liked Products:")
         .font(.headline)
         .padding(.top)
@@ -59,39 +93,23 @@ struct TileStackView: View {
             HStack {
                 ForEach(likedProducts, id: \.id) { product in
                     Text(product.brand) // Replace with product's name or identifier
-                    .padding()
-                    .background(Color.blue.opacity(0.2))
-                    .cornerRadius(8)
+                        .padding()
+                        .background(Color.blue.opacity(0.2))
+                        .cornerRadius(8)
                 }
             }
         }
         .task {
             do {
-                    await fetchTileData() // Load products first
-                    if let email = userAuth.email {
-                        await fetchUserData(email: email) // Fetch user-specific data
+                await fetchTileData() // Load products first
+                if let email = userAuth.email {
+                    await fetchUserData(email: email) // Fetch user-specific data
                 } else {
                     errorMessage = "Not logged in"
                 }
-                    
-                } catch {
-                    errorMessage = "Failed to load data: \(error.localizedDescription)"
-                }
-        }
-    }
-    func filteredData() -> [Product] {
-        if selectedCategory == "All" && selectedBrand == "All" {
-            return allProducts
-        } else if selectedCategory == "All" {
-            return allProducts.filter {
-                $0.brand as String == selectedBrand
+            } catch {
+                errorMessage = "Failed to load data: \(error.localizedDescription)"
             }
-        } else if selectedBrand == "All" {
-            return allProducts.filter {
-                $0.category as String == selectedCategory
-            }
-        } else {
-            return allProducts.filter { $0.category as String == selectedCategory && $0.brand as String == selectedBrand}
         }
     }
     func fetchTileData() async {
@@ -109,6 +127,21 @@ struct TileStackView: View {
                     }
         } catch {
           print("Error getting documents: \(error)")
+        }
+    }
+    func filteredData() -> [Product] {
+        if selectedCategory == "All" && selectedBrand == "All" {
+            return allProducts
+        } else if selectedCategory == "All" {
+            return allProducts.filter {
+                $0.brand as String == selectedBrand
+            }
+        } else if selectedBrand == "All" {
+            return allProducts.filter {
+                $0.category as String == selectedCategory
+            }
+        } else {
+            return allProducts.filter { $0.category as String == selectedCategory && $0.brand as String == selectedBrand}
         }
     }
     func toggleLike(product: Product, email: String) async {
@@ -153,20 +186,6 @@ struct TileStackView: View {
         }
 
     }
-    private func handleSwipe(product: Product, liked: Bool, email: String) {
-            if let index = allProducts.firstIndex(of: product) {
-                if liked {
-                    Task {
-                        await toggleLike(product: product, email: email)
-                    }
-                } else {
-                    Task {
-                        await toggleDislike(product: product, email: email)
-                    }
-                }
-                allProducts.remove(at: index) // Remove swiped card from the stack
-            }
-        }
     func fetchUserData(email: String) async {
             let docRef = db.collection("users").document(email)
             do {
@@ -193,6 +212,6 @@ struct TileStackView: View {
 }
 /*
  #Preview {
- TileStackView(selectedCategory: $selectedCategory, selectedBrand: Binding<"All">)
+ TileGridView()
  }
  */
