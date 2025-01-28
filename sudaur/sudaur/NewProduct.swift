@@ -16,6 +16,7 @@ struct NewProduct: View {
     @State private var brand = ""
     @State private var product = ""
     @State private var amount = ""
+    @State private var description = ""
     @State private var selectedCategory = "Nutrition"
     @State private var errorMessage = ""
     @State private var successMessage = ""
@@ -31,6 +32,10 @@ struct NewProduct: View {
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .autocapitalization(.none)
         TextField("Amount", text: $amount)
+            .padding()
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+            .autocapitalization(.none)
+        TextField("Description", text: $description)
             .padding()
             .textFieldStyle(RoundedBorderTextFieldStyle())
             .autocapitalization(.none)
@@ -53,7 +58,7 @@ struct NewProduct: View {
         }
         
         Button(action: {
-            createProduct(brand: brand, product: product, amount: amount, category: selectedCategory)
+            createProduct(brand: brand, product: product, amount: amount, category: selectedCategory, description: description)
         }) {
             Text("Create")
                 .padding()
@@ -62,12 +67,13 @@ struct NewProduct: View {
                 .cornerRadius(8)
         }
     }
-    func createProduct(brand: String, product: String, amount: String, category: String) {
+    func createProduct(brand: String, product: String, amount: String, category: String, description: String) {
         db.collection("products").document().setData([
             "brand": brand,
             "product": product,
             "category": category,
-            "amount": amount
+            "amount": amount,
+            "description": description
             ]) { error in
             if let error = error {
                 print("Error writing document: \(error)")

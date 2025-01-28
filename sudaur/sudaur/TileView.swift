@@ -31,5 +31,5 @@ struct TileView: View {
 }
 
 #Preview {
-    TileView(product: Product(id: "abc", brand: "nike", product: "pegs", category: "apparel", amount: "2"))
+    TileView(product: Product(id: "abc", brand: "nike", product: "pegs", category: "apparel", amount: "2", description: "product description"))
 }

@@ -122,7 +122,8 @@ struct TileGridView: View {
                             brand: data["brand"] as? String ?? "Unknown",
                             product: data["product"] as? String ?? "N/A",
                             category: data["category"] as? String ?? "Other",
-                            amount: data["amount"] as? String ?? "Other"
+                            amount: data["amount"] as? String ?? "Other",
+                            description: data["description"] as? String ?? "Other"
                         )
                     }
         } catch {

@@ -135,7 +135,8 @@ struct BrowseView: View {
                             brand: data["brand"] as? String ?? "Unknown",
                             product: data["product"] as? String ?? "N/A",
                             category: data["category"] as? String ?? "Other",
-                            amount: data["amount"] as? String ?? "Other"
+                            amount: data["amount"] as? String ?? "Other",
+                            description: data["description"] as? String ?? "Other"
                         )
                     }
         } catch {
@@ -215,6 +216,7 @@ struct Product: Identifiable, Equatable {
     var product: String
     var category: String
     var amount: String
+    var description: String
 }
 
 #Preview {
