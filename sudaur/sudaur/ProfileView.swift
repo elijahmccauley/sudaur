@@ -30,21 +30,17 @@ struct ProfileView: View {
                     HStack {
                         Text("Name:")
                         Text(data["name"] as? String ?? "Name")
-                        
                     }
                     .padding()
-
                     HStack {
                         Text("School:")
                         Text(data["school"] as? String ?? "School")
                         
                     }
                     .padding()
-
                     HStack {
                         Text("Sport/Position:")
                         Text(data["sport"] as? String ?? "Sport/Position")
-                        
                     }
                     .padding()
                     HStack {
@@ -53,10 +49,8 @@ struct ProfileView: View {
                         Spacer()
                         Text("Followers: 44.2K")
                         Spacer()
-                        
                     }
                     .padding()
-                    
                     HStack {
                         Text("Bio:")
                         if isEditing {
@@ -71,9 +65,7 @@ struct ProfileView: View {
             } else {
                 Text("Loading...")
             }
-
             Spacer()
-
             HStack {
                 Button(action: {
                     isEditing.toggle()
@@ -87,7 +79,6 @@ struct ProfileView: View {
                         .foregroundColor(.white)
                         .cornerRadius(8)
                 }
-
                 if isEditing {
                     Button(action: {
                         isEditing = false

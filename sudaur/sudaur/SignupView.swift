@@ -98,25 +98,23 @@ struct SignupView: View {
           // ...
             if let error = error {
                 self.errorMessage = error.localizedDescription
-
-                    }
-            else{
+            } else {
                 print("User created successfully: \(authResult?.user.email ?? "")")
                 db.collection("users").document(email).setData([
-                        "name": name,
-                        "sport": selectedSport,
-                        "school": school,
-                        "gender": selectedGender,
-                        "bio": "",
-                        "ighandle": ighandle,
-                        "likedProducts": []
-                    ]) { error in
-                        if let error = error {
-                            print("Error writing document: \(error)")
-                        } else {
-                            print("Document successfully written!")
-                        }
+                    "name": name,
+                    "sport": selectedSport,
+                    "school": school,
+                    "gender": selectedGender,
+                    "bio": "",
+                    "ighandle": ighandle,
+                    "likedProducts": []
+                ]) { error in
+                    if let error = error {
+                        print("Error writing document: \(error)")
+                    } else {
+                        print("Document successfully written!")
                     }
+                }
                 userAuth.email = email
                 userAuth.isAuthenticated = true
             }

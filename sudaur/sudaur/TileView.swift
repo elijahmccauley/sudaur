@@ -15,8 +15,8 @@ struct TileView: View {
             if !isFlipped {
                 VStack {
                     Image("leon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                     Text(product.brand as String)
                         .font(.headline)
                         .multilineTextAlignment(.center)

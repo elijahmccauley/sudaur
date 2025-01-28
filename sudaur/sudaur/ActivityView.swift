@@ -96,31 +96,31 @@ struct ActivityView: View {
         }
         .task {
             do {
-                    await fetchTileData() // Load products first
-                    if let email = userAuth.email {
-                        await fetchUserData(email: email) // Fetch user-specific data
-                    } else {
-                        errorMessage = "Not logged in"
-                    }
-                } catch {
-                    errorMessage = "Failed to load data: \(error.localizedDescription)"
+                await fetchTileData() // Load products first
+                if let email = userAuth.email {
+                    await fetchUserData(email: email) // Fetch user-specific data
+                } else {
+                    errorMessage = "Not logged in"
                 }
+            } catch {
+                errorMessage = "Failed to load data: \(error.localizedDescription)"
+            }
         }
     }
     func fetchTileData() async {
         do {
           let querySnapshot = try await db.collection("products").getDocuments()
             allProducts = querySnapshot.documents.map { document in
-                        let data = document.data()
-                        return Product(
-                            id: document.documentID,
-                            brand: data["brand"] as? String ?? "Unknown",
-                            product: data["product"] as? String ?? "N/A",
-                            category: data["category"] as? String ?? "Other",
-                            amount: data["amount"] as? String ?? "Other",
-                            description: data["description"] as? String ?? "Other"
-                        )
-                    }
+                let data = document.data()
+                return Product(
+                    id: document.documentID,
+                    brand: data["brand"] as? String ?? "Unknown",
+                    product: data["product"] as? String ?? "N/A",
+                    category: data["category"] as? String ?? "Other",
+                    amount: data["amount"] as? String ?? "Other",
+                    description: data["description"] as? String ?? "Other"
+                )
+            }
         } catch {
           print("Error getting documents: \(error)")
         }

@@ -24,9 +24,9 @@ struct TileStackView: View {
     @Binding var selectedBrand: String
     let categories = ["All", "Apparel", "Nutrition", "Recovery", "Other"]
     var brands: [String] {
-            let allBrands = allProducts.map { $0.brand }
-            let uniqueBrands = Set(allBrands)
-            return ["All"] + uniqueBrands.sorted()
+        let allBrands = allProducts.map { $0.brand }
+        let uniqueBrands = Set(allBrands)
+        return ["All"] + uniqueBrands.sorted()
     }
     var body: some View {
         let unprocessedProducts = filteredData().filter { product in
@@ -67,16 +67,15 @@ struct TileStackView: View {
         }
         .task {
             do {
-                    await fetchTileData() // Load products first
-                    if let email = userAuth.email {
-                        await fetchUserData(email: email) // Fetch user-specific data
+                await fetchTileData() // Load products first
+                if let email = userAuth.email {
+                    await fetchUserData(email: email) // Fetch user-specific data
                 } else {
                     errorMessage = "Not logged in"
                 }
-                    
-                } catch {
-                    errorMessage = "Failed to load data: \(error.localizedDescription)"
-                }
+            } catch {
+                errorMessage = "Failed to load data: \(error.localizedDescription)"
+            }
         }
     }
     func filteredData() -> [Product] {
@@ -98,32 +97,32 @@ struct TileStackView: View {
         do {
           let querySnapshot = try await db.collection("products").getDocuments()
             allProducts = querySnapshot.documents.map { document in
-                        let data = document.data()
-                        return Product(
-                            id: document.documentID,
-                            brand: data["brand"] as? String ?? "Unknown",
-                            product: data["product"] as? String ?? "N/A",
-                            category: data["category"] as? String ?? "Other",
-                            amount: data["amount"] as? String ?? "Other",
-                            description: data["description"] as? String ?? "Other"
-                        )
-                    }
+                let data = document.data()
+                return Product(
+                    id: document.documentID,
+                    brand: data["brand"] as? String ?? "Unknown",
+                    product: data["product"] as? String ?? "N/A",
+                    category: data["category"] as? String ?? "Other",
+                    amount: data["amount"] as? String ?? "Other",
+                    description: data["description"] as? String ?? "Other"
+                )
+            }
         } catch {
           print("Error getting documents: \(error)")
         }
     }
     func toggleLike(product: Product, email: String) async {
         if let index = likedProducts.firstIndex(of: product) {
-                // If the product is already liked, remove it
-                likedProducts.remove(at: index)
-                if let idIndex = userLikedProducts.firstIndex(of: product.id) {
-                    userLikedProducts.remove(at: idIndex)
-                }
-            } else {
-                // Add the product to liked products
-                likedProducts.append(product)
-                userLikedProducts.append(product.id)
+            // If the product is already liked, remove it
+            likedProducts.remove(at: index)
+            if let idIndex = userLikedProducts.firstIndex(of: product.id) {
+                userLikedProducts.remove(at: idIndex)
             }
+        } else {
+            // Add the product to liked products
+            likedProducts.append(product)
+            userLikedProducts.append(product.id)
+        }
         let updatedData: [String: Any] = ["likedProducts": userLikedProducts]
         do {
             try await db.collection("users").document(email).setData(updatedData, merge: true)
@@ -135,16 +134,16 @@ struct TileStackView: View {
     }
     func toggleDislike(product: Product, email: String) async {
         if let index = dislikedProducts.firstIndex(of: product) {
-                // If the product is already disliked, remove it
-                dislikedProducts.remove(at: index)
-                if let idIndex = userDislikedProducts.firstIndex(of: product.id) {
-                    userDislikedProducts.remove(at: idIndex)
-                }
-            } else {
-                // Add the product to liked products
-                dislikedProducts.append(product)
-                userDislikedProducts.append(product.id)
+            // If the product is already disliked, remove it
+            dislikedProducts.remove(at: index)
+            if let idIndex = userDislikedProducts.firstIndex(of: product.id) {
+                userDislikedProducts.remove(at: idIndex)
             }
+        } else {
+            // Add the product to liked products
+            dislikedProducts.append(product)
+            userDislikedProducts.append(product.id)
+        }
         let updatedData: [String: Any] = ["dislikedProducts": userDislikedProducts]
         do {
             try await db.collection("users").document(email).setData(updatedData, merge: true)
@@ -155,41 +154,38 @@ struct TileStackView: View {
 
     }
     private func handleSwipe(product: Product, liked: Bool, email: String) {
-            if let index = allProducts.firstIndex(of: product) {
-                if liked {
-                    Task {
-                        await toggleLike(product: product, email: email)
-                    }
-                } else {
-                    Task {
-                        await toggleDislike(product: product, email: email)
-                    }
+        if let index = allProducts.firstIndex(of: product) {
+            if liked {
+                Task {
+                    await toggleLike(product: product, email: email)
                 }
-                allProducts.remove(at: index) // Remove swiped card from the stack
+            } else {
+                Task {
+                    await toggleDislike(product: product, email: email)
+                }
             }
+            allProducts.remove(at: index) // Remove swiped card from the stack
         }
+    }
     func fetchUserData(email: String) async {
-            let docRef = db.collection("users").document(email)
-            do {
-                let document = try await docRef.getDocument()
-                if document.exists {
-                    documentData = document.data()
-                    // Initialize local fields with fetched data
-                    
-                    userLikedProducts = documentData?["likedProducts"] as? [String] ?? []
-                    likedProducts = userLikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
-                    })
+        let docRef = db.collection("users").document(email)
+        do {
+            let document = try await docRef.getDocument()
+            if document.exists {
+                documentData = document.data()
+                // Initialize local fields with fetched data
+                userLikedProducts = documentData?["likedProducts"] as? [String] ?? []
+                likedProducts = userLikedProducts.compactMap { id in allProducts.first(where: { $0.id == id })
                                 }
-                    userDislikedProducts = documentData?["dislikedProducts"] as? [String] ?? []
-                    dislikedProducts = userDislikedProducts.compactMap { id in allProducts.first(where: { $0.id == id
-                    })
+                userDislikedProducts = documentData?["dislikedProducts"] as? [String] ?? []
+                dislikedProducts = userDislikedProducts.compactMap { id in allProducts.first(where: { $0.id == id })
                                 }
-                } else {
-                    errorMessage = "Document does not exist"
-                }
-            } catch {
-                errorMessage = error.localizedDescription
+            } else {
+                errorMessage = "Document does not exist"
             }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 /*

@@ -45,19 +45,19 @@ struct ContentView: View {
     @State private var activeView: ActiveView = .feed
 
 
-        var body: some View {
-            VStack {
-                if userAuth.isAuthenticated {
-                    // Main View with Header and NavBar
-                    MainView(activeView: $activeView)
-                        .environmentObject(userAuth)
-                } else {
-                    // Show Login View
-                    LoginView()
-                        .environmentObject(userAuth)
-                }
+    var body: some View {
+        VStack {
+            if userAuth.isAuthenticated {
+                // Main View with Header and NavBar
+                MainView(activeView: $activeView)
+                    .environmentObject(userAuth)
+            } else {
+                // Show Login View
+                LoginView()
+                    .environmentObject(userAuth)
             }
         }
+    }
 }
 
 #Preview {
